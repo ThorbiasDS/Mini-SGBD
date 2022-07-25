@@ -7,12 +7,6 @@
 #ifndef DEF
 #define DEF
 
-typedef struct {
-  int idPedido;
-  Data data;
-  char idCliente;
-} Pedido;
-
 void inserirPedido(Produto prod, Cliente client){
   
 }

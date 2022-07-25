@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 typedef struct {
@@ -7,31 +8,32 @@ typedef struct {
   float preco;
 } Produto;
 
-Produto lerProduto(){
-  
-  Produto prod;
-  
-  fgets(prod.descricao, 40, stdin);
-  if(prod.descricao[strlen(prod.descricao) - 1] == '\n')
-    prod.descricao[strlen(prod.descricao) - 1] = '\0';
+Produto lerProduto() {
 
-  scanf("%f", &prod.preco);
+  Produto compra;
+  char lixo;
 
-  return prod;
+  compra.descricao[0] = '\0';
+  printf("Digite aqui a descriação do produto: \n");
+  fgets(compra.descricao, 40, stdin);
+
+  if (compra.descricao[strlen(compra.descricao) - 1] == '\n')
+    compra.descricao[strlen(compra.descricao) - 1] = '\0';
+
+  scanf("%f", &compra.preco);
+  scanf("%c", &lixo);
+
+  return compra;
 }
 
-void inserirProduto() {
-  
+void inserirProduto(Produto *compras, int *t, Produto prod) {
+
+  compras[*t] = prod;
+  (*t)++;
 }
 
-void mostrarProduto(){
-  
-}
+void mostrarProduto() {}
 
-void atualizarProduto(Produto comprinha){
-  
-}
+void atualizarProduto(Produto comprinha) {}
 
-void deletarProduto(Produto comprinha){
-  
-}
+void deletarProduto(Produto comprinha) {}

@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #include "pedido.h"
-#include "produto.h"
 
 #ifndef DEF
 #define DEF

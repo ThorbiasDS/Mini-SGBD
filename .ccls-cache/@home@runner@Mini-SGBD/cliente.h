@@ -10,7 +10,7 @@ typedef struct {
 Cliente lerCliente(){
   
   Cliente client;
-  
+  scanf("%d", &client.idCliente);
   fgets(client.nome, 30, stdin);
   if(client.nome[strlen(client.nome) - 1] == '\n')
     client.nome[strlen(client.nome) - 1] = '\0';
