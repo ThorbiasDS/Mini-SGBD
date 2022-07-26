@@ -33,7 +33,8 @@ typedef struct {
 } PedidoItens;
 
 void exibirMenu() {
-  printf("\nEcclesia Reformata Store\n\n");
+  printf("\nEcclesia Reformata Store\n");
+  printf("---------------------------------------------\n");
   printf("1. Cadastrar um novo cliente\n");
   printf("2. Listar, alterar ou remover um cliente\n");
   printf("3. Cadastrar um novo produto\n");
@@ -43,7 +44,7 @@ void exibirMenu() {
   printf("7. Exibir a nota fiscal de um pedido\n");
   printf("8. Encerrar o programa\n");
   printf("---------------------------------------------\n");
-  printf("Digite a opção: ");
+  printf("Escolha uma opção: ");
 }
 
 int inserirCliente(Cliente *clientes, int ncli) {
@@ -51,7 +52,6 @@ int inserirCliente(Cliente *clientes, int ncli) {
   Cliente client;
 
   printf("Informe: id[ENTER] nome[ENTER] celular[ENTER]\n");
-
   scanf(" %d ", &client.idCliente);
 
   fgets(client.nome, 30, stdin);
@@ -63,9 +63,9 @@ int inserirCliente(Cliente *clientes, int ncli) {
     client.celular[strlen(client.celular) - 1] = '\0';
 
   setbuf(stdin, NULL);
-
   clientes[ncli] = client;
   ncli++;
+
   return ncli;
 }
 
@@ -88,14 +88,15 @@ int inserirProduto(Produto *produtos, int nprod) {
   return nprod;
 }
 
-int inserirPedidos(Pedido *pedidos, Cliente *cliente, int nped) { 
+int inserirPedidos(Pedido *pedidos, Cliente *cliente, int nped) {
 
   Data data;
-  
+
   printf("Digite a data no formato dd mm aaaa: ");
   scanf("%d %d %d", &data.dia, &data.mes, &data.ano);
-  
-  return nped; }
+
+  return nped;
+}
 
 void listarClientes(Cliente *clientes, int ncli) {
 
@@ -111,46 +112,55 @@ void listarClientes(Cliente *clientes, int ncli) {
 
 void listarProdutos(Produto *produtos, int nprod) {
 
-  printf("O cadastro tem %d produto(s):\n", nprod);
-  printf("--------------------------------------------------------\n");
-  for (int i = 0; i < nprod; i++) {
+  printf("Lista de produtos:\n");
+  printf("----------------------------------------\n");
+  printf("| Codigo | Produto          | Val Unit |\n");
+  for (int i = 0; i < nprod; i++){
     printf("| %6d ", produtos[i].idProduto);
-    printf("| %-30s ", produtos[i].descricao);
-    printf("| R$%8.2f |\n", produtos[i].preco);
+    printf("| %-40s ", produtos[i].descricao);
+    printf("| %-6.2f |\n", produtos[i].preco);
   }
-  printf("--------------------------------------------------------\n");
+  printf("----------------------------------------\n");
+  
+  //printf("O cadastro tem %d produto(s):\n", nprod);
+  //printf("--------------------------------------------------------\n");
+  //for (int i = 0; i < nprod; i++) {
+    //printf("| %6d ", produtos[i].idProduto);
+    //printf("| %-30s ", produtos[i].descricao);
+    //printf("| R$%8.2f |\n", produtos[i].preco);
+  //}
+  //printf("--------------------------------------------------------\n");
 }
 
-void atualizarClientes(Cliente *cliente, int ncli) {
+void atualizarClientes(Cliente *cliente) {
 
-  printf("Digite o novo nome do cliente: ");
+  printf("Digite um novo nome para o cliente: ");
   fgets(cliente->nome, 30, stdin);
   if (cliente->nome[strlen(cliente->nome) - 1] == '\n')
     cliente->nome[strlen(cliente->nome) - 1] = '\0';
 
-  printf("Digite o novo número de telefone: ");
+  printf("Digite um novo número de telefone para o cliente: ");
+  fgets(cliente->celular, 10, stdin);
   if (cliente->celular[strlen(cliente->celular) - 1] == '\n')
     cliente->celular[strlen(cliente->celular) - 1] = '\0';
-  fgets(cliente->celular, 10, stdin);
 
   setbuf(stdin, NULL);
 
-  printf("Alterando o cliente do id %d...\n", cliente->idCliente);
+  printf("\nAlterando o cliente do id %d...\n", cliente->idCliente);
 }
 
-void atualizarProdutos(Produto *produto, int nprod) {
+void atualizarProdutos(Produto *produto) {
 
-  printf("Informe a nova descrição do produto: \n");
+  printf("Informe uma nova descrição para o produto: \n");
   fgets(produto->descricao, 40, stdin);
   if (produto->descricao[strlen(produto->descricao) - 1] == '\n')
     produto->descricao[strlen(produto->descricao) - 1] = '\0';
 
-  printf("Informe o novo preço do produto: \n");
+  printf("Informe um novo preço para o produto: \n");
   scanf(" %f ", &produto->preco);
-
   setbuf(stdin, NULL);
 
-  printf("Alterando o produto do id %d...\n", produto->idProduto);
+  printf("\nAlterando o produto do id %d...\n", produto->idProduto);
 }
 
 void removerClientes() {}
@@ -186,19 +196,21 @@ int main(void) {
     case 2:
 
       listarClientes(clientes, ncli);
-      printf("Escolha a(alterar) ou r(remover) um cliente: ");
+      printf("Escolha a(alterar) ou r(remover) um cliente: \n");
       scanf("%c", &acao);
       scanf("%c", &lixo);
 
       if (acao == 'a') {
-        printf("Informe id do cliente que deseja alterar: ");
+        printf("Informe id do cliente que deseja alterar: \n");
         scanf("%d", &c.idCliente);
         scanf("%c", &lixo);
         for (int i = 0; i < ncli; i++) {
           if (c.idCliente == clientes[i].idCliente)
-            atualizarClientes(&clientes[i], ncli);
+            atualizarClientes(&clientes[i]);
         }
         listarClientes(clientes, ncli);
+      } else if (acao == 'r') {
+        removerClientes();
       }
       break;
 
@@ -211,19 +223,21 @@ int main(void) {
     case 4:
 
       listarProdutos(produtos, nprod);
-      printf("Escolha a(alterar) ou r(remover) um produto: ");
-      scanf("%c", &acao);
-      scanf("%c", &lixo);
+      printf("Escolha a(alterar) ou r(remover) um produto: \n");
+      scanf(" %c ", &acao);
+      scanf(" %c ", &lixo);
 
       if (acao == 'a') {
-        printf("Informe id do produto que deseja alterar: ");
-        scanf("%d", &p.idProduto);
-        scanf("%c", &lixo);
+        printf("Informe id do produto que deseja alterar: \n");
+        scanf(" %d ", &p.idProduto);
+        scanf(" %c ", &lixo);
         for (int i = 0; i < nprod; i++) {
           if (p.idProduto == produtos[i].idProduto)
-            atualizarProdutos(&produtos[i], nprod);
+            atualizarProdutos(&produtos[i]);
         }
         listarProdutos(produtos, nprod);
+      } else if (acao == 'r') {
+        removerProdutos();
       }
       break;
 
