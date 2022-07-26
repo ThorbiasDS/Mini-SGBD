@@ -39,8 +39,8 @@ void exibirMenu() {
   printf("2. Listar, alterar ou remover um cliente\n");
   printf("3. Cadastrar um novo produto\n");
   printf("4. Listar, alterar ou remover um produto\n");
-  printf("5. Fazer um novo pedido\n");
-  printf("6. Listar os pedidos\n");
+  printf("5. Cadastrar um novo pedido\n");
+  printf("6. Listar um pedido\n");
   printf("7. Exibir a nota fiscal de um pedido\n");
   printf("8. Encerrar o programa\n");
   printf("---------------------------------------------\n");
@@ -64,9 +64,8 @@ int inserirCliente(Cliente *clientes, int ncli) {
 
   setbuf(stdin, NULL);
   clientes[ncli] = client;
-  ncli++;
 
-  return ncli;
+  return ++ncli;
 }
 
 int inserirProduto(Produto *produtos, int nprod) {
@@ -75,25 +74,27 @@ int inserirProduto(Produto *produtos, int nprod) {
 
   printf("Informe: id[ENTER] descricao[ENTER] preco[ENTER]\n");
   scanf(" %d ", &product.idProduto);
-  fgets(product.descricao, 40, stdin);
-  scanf(" %f ", &product.preco);
-  setbuf(stdin, NULL);
 
+  fgets(product.descricao, 40, stdin);
   if (product.descricao[strlen(product.descricao) - 1] == '\n')
     product.descricao[strlen(product.descricao) - 1] = '\0';
 
-  produtos[nprod] = product;
-  nprod++;
+  scanf(" %f ", &product.preco);
 
-  return nprod;
+  setbuf(stdin, NULL);
+  produtos[nprod] = product;
+
+  return ++nprod;
 }
 
-int inserirPedidos(Pedido *pedidos, Cliente *cliente, int nped) {
+int inserirPedido(Pedido *pedidos, Cliente *cliente, int nped) {
 
   Data data;
 
   printf("Digite a data no formato dd mm aaaa: ");
   scanf("%d %d %d", &data.dia, &data.mes, &data.ano);
+
+  setbuf(stdin, NULL);
 
   return nped;
 }
@@ -113,23 +114,14 @@ void listarClientes(Cliente *clientes, int ncli) {
 void listarProdutos(Produto *produtos, int nprod) {
 
   printf("Lista de produtos:\n");
-  printf("----------------------------------------\n");
-  printf("| Codigo | Produto          | Val Unit |\n");
-  for (int i = 0; i < nprod; i++){
+  printf("-------------------------------------------------------------\n");
+  printf("| Codigo | Produto                               | Val Unit |\n");
+  for (int i = 0; i < nprod; i++) {
     printf("| %6d ", produtos[i].idProduto);
     printf("| %-40s ", produtos[i].descricao);
-    printf("| %-6.2f |\n", produtos[i].preco);
+    printf("|%6.2f |\n", produtos[i].preco);
   }
-  printf("----------------------------------------\n");
-  
-  //printf("O cadastro tem %d produto(s):\n", nprod);
-  //printf("--------------------------------------------------------\n");
-  //for (int i = 0; i < nprod; i++) {
-    //printf("| %6d ", produtos[i].idProduto);
-    //printf("| %-30s ", produtos[i].descricao);
-    //printf("| R$%8.2f |\n", produtos[i].preco);
-  //}
-  //printf("--------------------------------------------------------\n");
+  printf("-------------------------------------------------------------\n");
 }
 
 void atualizarClientes(Cliente *cliente) {
@@ -181,7 +173,6 @@ int main(void) {
   while (opcao != 8) {
 
     exibirMenu();
-
     scanf("%d", &opcao);
     scanf("%c", &lixo);
 
@@ -224,13 +215,13 @@ int main(void) {
 
       listarProdutos(produtos, nprod);
       printf("Escolha a(alterar) ou r(remover) um produto: \n");
-      scanf(" %c ", &acao);
-      scanf(" %c ", &lixo);
+      scanf("%c", &acao);
+      scanf("%c", &lixo);
 
       if (acao == 'a') {
         printf("Informe id do produto que deseja alterar: \n");
-        scanf(" %d ", &p.idProduto);
-        scanf(" %c ", &lixo);
+        scanf("%d", &p.idProduto);
+        scanf("%c", &lixo);
         for (int i = 0; i < nprod; i++) {
           if (p.idProduto == produtos[i].idProduto)
             atualizarProdutos(&produtos[i]);
@@ -243,13 +234,16 @@ int main(void) {
 
     case 5:
 
-      pedidos = realloc(pedidos, (ncli + 1) * sizeof(Produto));
-      printf("Informe o id do cliente para fazer um novo pedido: ");
-      scanf(" %d \n", &pe.idCliente);
+      printf("Informe o id do cliente: \n");
+      scanf("%d", &c.idCliente);
+      scanf("%c", &lixo);
       for (int i = 0; i < ncli; i++) {
-        if (pe.idCliente == clientes[i].idCliente)
-          inserirPedidos(pedidos, &clientes[i], nped);
+        if (c.idCliente == clientes[i].idCliente) {
+          pedidos = realloc(pedidos, (nped + 1) * sizeof(Pedido));
+          inserirPedido(pedidos, &clientes[i], nped);
+        }
       }
+      break;
     }
   }
 
